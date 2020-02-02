@@ -35,6 +35,9 @@ print_r($N);
 
 mysqli_close($sql);
 
+file_put_contents(VERSION_PATH,
+		  (1 + @intval(file_get_contents(VERSION_PATH))));
+
 /* Functions */
 function chars ($s, $limit=-1)
 {
@@ -95,7 +98,8 @@ function list_files ($path)
 	    $query = "SELECT `عنوان‏` FROM `" . SQL_TABLE_DEF . "` WHERE `ردیف`=$f";
 	    $result = mysqli_query($sql, $query);
 	    if(!$result) die($query);
-	    $title = mysqli_fetch_assoc($result)["عنوان‏"];
+	    $title = str_replace(["عنوان‏:" , "Title‎:"], "",
+				 mysqli_fetch_assoc($result)["عنوان‏"]);
 	    $files[] = "$f\t$title";
 	}
 	$n++;

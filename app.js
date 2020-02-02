@@ -1,3 +1,6 @@
+/* Tree */
+const treePath = "tree";
+
 /* Sanitizing */
 const ar_signs =["ِ", "ُ", "ٓ", "ٰ", "ْ", "ٌ", "ٍ", "ً", "ّ", "َ"];
 const extras = ["\\?", "!", "#", "&","\\*", "\\(", "\\)", "-","\\+",
@@ -10,6 +13,7 @@ const _assoc = {
     'fa' : ['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹'],
     'ckb' : ['٠', '١', '٢', '٣', '٤','٥', '٦', '٧', '٨', '٩'],
 };
+
 /* Language */
 const langStorage = "lang";
 const defaultLang = "fa";
@@ -27,6 +31,8 @@ const body = document.body;
 
 /* Storage */
 const versionStorage = "version";
+const storageTimeoutDays = 100;
+const storageTimeout = storageTimeoutDays * 24 * 60 * 60 * 1000;
 
 window.addEventListener("load", function () {
     currentLang = getLang();
@@ -84,51 +90,91 @@ function P(key)
 const qFrm = body.querySelector("#qFrm");
 qFrm.addEventListener("submit", function (e) {
     e.preventDefault();
-    console.log("hey");
+    const qTxt = body.querySelector("#qTxt");
+    find(qTxt.value, "#result", 10);
 });
 
-function find (q, n=-1)
+function find (q, t, n=-1)
 {
-    q = sanitize_str(q);
+    const target = body.querySelector(t);
+    q = sanitizeStr(q);
     const firstChar = q[0];
-    const path = `${firstChar}/list`;
-    
-    
+    const path = `${treePath}/${firstChar}/list`;
+    /* Loading... */
+    loadList(path, function (list) {
+	if(list === null)
+	{
+	    target.innerText = "Letter's List Not Found!";
+	    return;
+	}
+	const result = _filter(q, firstChar, list, target);
+	target.innerHTML = result;
+	/* Loading... */
+    });
 }
-function isJson (s)
+function _filter (q, firstChar, list, target)
 {
-    try
+    /* TODO: Last chance: search in all local files */
+    let result = "";
+    list = list.split("\n");
+    for (const i in list)
     {
-	return JSON.parse(s);
+	const item = list[i].split("\t");
+	if(item.length < 2)
+	    continue;
+	const title = item[1];
+	const sanTitle = sanitizeStr(title);
+	if(sanTitle.indexOf(q) !== -1)
+	{
+	    const id = item[0];
+	    const href = `${treePath}/${firstChar}/${id}`;
+	    result +=
+		`<button type='button' onclick='loadItem("${href}")'>${title}</button>`;
+	}
     }
-    catch (e)
-    {
-	return null
-    }
+    return result;
+}
+function loadItem (path, callback)
+{
+    
 }
 function loadList (path, callback)
 {
-    let list = isJson(localStorage.getItem(path));
-    if(list !== null)
+    let list = localStorage.getItem(path);
+    if(list === null)
+	downloadList(path, callback);
+    else
     {
 	callback(list);
 	updateList(path);
     }
-    else
-    {
-	getUrl(path, function (resp) {
-	    list = resp.responseText;
-	    localStorage.setItem(path, list);
-	    callback(list);
-	});
-    }
+}
+function downloadList (path, callback)
+{
+    getUrl(path, function (resp) {
+	if(resp.status === 404)
+	{
+	    callback(null);
+	    return;
+	}
+	list = resp.responseText;
+	localStorage.setItem(path, list);
+	localStorage.setItem(`${path}_time`, Date.now());
+	callback(list);
+    });
 }
 function updateList (path)
 {
     const clientVersion = localStorage.getItem(versionStorage);
-    
+    const listTimeoutStorage = `${path}_time`;
+    const listTimeout = localStorage.getItem(listTimeoutStorage);
+    if(clientVersion && listTimeout &&
+       ((Date.now() - listTimeout) > storageTimeout))
+    {
+	downloadList(path, (x) => null);
+    }
 }
-function sanitize_str(s)
+function sanitizeStr (s)
 {
     for(const i in extras)
 	s = s.replace(new RegExp(extras[i], "g"), "");
@@ -137,12 +183,12 @@ function sanitize_str(s)
     s = s.replace(new RegExp("ي", "g"), "ی");
     s = s.replace(new RegExp("ك", "g"), "ک");
     s = s.toLowerCase();
-    s = num_convert(s, "fa", "en");
-    s = num_convert(s, "ckb", "en");
+    s = numConvert(s, "fa", "en");
+    s = numConvert(s, "ckb", "en");
     s = s.replace(/\s+/g, "");
     return s;
 }
-function num_convert(s, f, t)
+function numConvert (s, f, t)
 {
     for(const i in _assoc["en"])
 	s = s.replace(new RegExp(_assoc[f][i], "g"), _assoc[t][i]);
