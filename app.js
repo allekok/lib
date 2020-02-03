@@ -28,6 +28,8 @@ let currentLangCc;
 const html = document.querySelector("html");
 const head = document.head;
 const body = document.body;
+const defTargetId = "#result";
+const defTarget = body.querySelector(defTargetId);
 
 /* Storage */
 const versionStorage = "version";
@@ -101,7 +103,7 @@ function find (q, t, n=-1)
     const firstChar = q[0];
     const path = `${treePath}/${firstChar}/list`;
     /* Loading... */
-    loadList(path, function (list) {
+    loadItem(path, function (list) {
 	if(list === null)
 	{
 	    target.innerText = "Letter's List Not Found!";
@@ -129,27 +131,32 @@ function _filter (q, firstChar, list, target)
 	    const id = item[0];
 	    const href = `${treePath}/${firstChar}/${id}`;
 	    result +=
-		`<button type='button' onclick='loadItem("${href}")'>${title}</button>`;
+		`<button type='button' onclick='O("${href}")'>${title}</button>`;
 	}
     }
     return result;
 }
+function O (path)
+{
+    const D = body.querySelector("#D");
+    D.style.display = "block";
+    /* TODO: Loading... */
+    loadItem(path, function (item) {
+	D.innerHTML = `<pre>${item}</pre>`;
+    });
+}
 function loadItem (path, callback)
 {
-    
-}
-function loadList (path, callback)
-{
-    let list = localStorage.getItem(path);
-    if(list === null)
-	downloadList(path, callback);
+    const item = localStorage.getItem(path);
+    if(item === null)
+	downloadItem(path, callback);
     else
     {
-	callback(list);
-	updateList(path);
+	callback(item);
+	updateItem(path);
     }
 }
-function downloadList (path, callback)
+function downloadItem (path, callback)
 {
     getUrl(path, function (resp) {
 	if(resp.status === 404)
@@ -157,21 +164,21 @@ function downloadList (path, callback)
 	    callback(null);
 	    return;
 	}
-	list = resp.responseText;
-	localStorage.setItem(path, list);
+	const item = resp.responseText;
+	localStorage.setItem(path, item);
 	localStorage.setItem(`${path}_time`, Date.now());
-	callback(list);
+	callback(item);
     });
 }
-function updateList (path)
+function updateItem (path)
 {
     const clientVersion = localStorage.getItem(versionStorage);
-    const listTimeoutStorage = `${path}_time`;
-    const listTimeout = localStorage.getItem(listTimeoutStorage);
-    if(clientVersion && listTimeout &&
-       ((Date.now() - listTimeout) > storageTimeout))
+    const itemTimeoutStorage = `${path}_time`;
+    const itemTimeout = localStorage.getItem(itemTimeoutStorage);
+    if(clientVersion && itemTimeout &&
+       ((Date.now() - itemTimeout) > storageTimeout))
     {
-	downloadList(path, (x) => null);
+	downloadItem(path, (x) => null);
     }
 }
 function sanitizeStr (s)
