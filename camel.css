@@ -1,4 +1,103 @@
+@font-face
+{
+    font-family:'naskh';
+    font-display:swap;
+    font-style:normal;
+    src: url('DroidNaskh-Regular.woff2') format('woff2');
+}
+@font-face
+{
+    font-family:'icon';
+    font-display:swap;
+    font-style:normal;
+    src: url('Material-Icons.woff2') format('woff2');
+}
+.icon
+{
+    font-family:'icon';
+    font-size:inherit;
+    font-style:normal;
+    vertical-align:middle;
+}
+html
+{
+    margin:0;
+}
+body
+{
+    font-family:'naskh';
+    max-width:1000px;
+    margin:0 auto;
+    padding:1em;
+    text-align:center;
+    line-height:2.5;
+}
+button, input
+{
+    font-family:'naskh';
+    appearance:none;
+    -webkit-appearance:none;
+    box-sizing:border-box;
+    border:0;
+    outline:0;
+    background:none;
+}
+header h1
+{
+    font-size:5em;
+    color:#900;
+}
 #D
 {
     display:none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255,255,255,.96);
+    text-align: right;
+    padding:1em 2em;
+    overflow:auto;
+    box-sizing:border-box;
+}
+#qTxt
+{
+    width:100%;
+    font-size:inherit;
+    border-bottom:2px solid #aaa;
+    padding:1em;
+}
+#qTxt:focus
+{
+    border-bottom-color:#000;
+}
+#result
+{
+    padding:1em 0;
+}
+#result button
+{
+    display:block;
+    font-size:inherit;
+    text-align:right;
+    margin-bottom:1em;
+}
+#result button .icon
+{
+    font-size:1.5em;
+}
+#result button:hover
+{
+    color:#900;
+}
+#close
+{
+    text-align:center;
+    background: #eee;
+    border-radius: 1em;
+}
+#close:hover
+{
+    background:#ddd;
 }
