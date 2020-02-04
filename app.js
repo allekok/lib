@@ -240,3 +240,24 @@ close.addEventListener("click", function () {
     parent.querySelector("#res").innerHTML = "";
     parent.style.display = "none";
 });
+
+function plan ()
+{
+    const D = body.querySelector("#D");
+    const DRes = D.querySelector("#res");
+    D.style.display = "block";
+    /* TODO: Loading... */
+    getUrl("plan", function (resp) {
+	const item = resp.responseText;
+	let html = "<table>";
+	const lines = item.split("\n");
+	for(const i in lines)
+	{
+	    if(! lines[i].trim()) continue;
+	    const cell = lines[i].split("  ");
+	    html += `<tr><td>${cell[0]}</td><td>${cell[1]}</td></tr>`;
+	}
+	html += "</table>";
+	DRes.innerHTML = html;
+    });
+}

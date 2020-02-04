@@ -44,7 +44,7 @@ button, input
 }
 header h1
 {
-    font-size:5em;
+    font-size:4.5em;
     color:#900;
 }
 #D
@@ -76,7 +76,7 @@ header h1
 {
     padding:1em 0;
 }
-#result button
+button
 {
     display:block;
     font-size:inherit;
@@ -87,7 +87,7 @@ header h1
 {
     font-size:1.5em;
 }
-#result button:hover
+button:hover
 {
     color:#900;
 }
@@ -96,8 +96,27 @@ header h1
     text-align:center;
     background: #eee;
     border-radius: 1em;
+    margin-bottom:.7em;
 }
 #close:hover
 {
     background:#ddd;
+}
+#D #res table
+{
+    width:100%;
+}
+#D #res table td:nth-child(even)
+{
+    padding-right:1em;
+    border-right:1px solid;
+}
+footer
+{
+    text-align:left;
+    margin-top:1em
+}
+footer button
+{
+    display:inline-block;
 }
