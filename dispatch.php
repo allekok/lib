@@ -98,7 +98,7 @@ function list_files ($path)
 	    $query = "SELECT `عنوان‏` FROM `" . SQL_TABLE_DEF . "` WHERE `ردیف`=$f";
 	    $result = mysqli_query($sql, $query);
 	    if(!$result) die($query);
-	    $title = str_replace(["عنوان‏:" , "Title‎:"], "",
+	    $title = str_replace(["عنوان‏:" , "Title‎:", "\n"], ["", "", "  "],
 				 mysqli_fetch_assoc($result)["عنوان‏"]);
 	    $files[] = "$f\t$title";
 	}
