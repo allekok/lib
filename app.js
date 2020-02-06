@@ -3,7 +3,7 @@
 const treePath = "tree";
 
 /* Sanitizing */
-const ar_signs =["ِ", "ُ", "ٓ", "ٰ", "ْ", "ٌ", "ٍ", "ً", "ّ", "َ"];
+const arSigns =["ِ", "ُ", "ٓ", "ٰ", "ْ", "ٌ", "ٍ", "ً", "ّ", "َ"];
 const extras = ["\\?", "!", "#", "&","\\*", "\\(", "\\)", "-","\\+",
 		"=", "_","\\[", "\\]", "{","}","<",">","/",
 		"|", "'","\"", ";", ":", ",","\\.", "~", "`",
@@ -29,10 +29,10 @@ const Ps = {
 	"fa":"کتاب‌خانه",
     },
     "header":{
-	"fa":"کتابـــــــ‌خانه",
+	"fa":"کتابــــــ‌خانه",
     },
     "desc":{
-	"fa":"کتابخانه دانشگاه آزاد سردشت",
+	"fa":"کتاب‌خانه دانشگاه آزاد سردشت",
     },
     "search in books":{
 	"fa":"جست‌وجو در کتاب‌ها...",
@@ -91,6 +91,7 @@ function applyLang (lang)
     html.setAttribute("dir", lang.dir);
     head.querySelector("title").innerText = P("title");
     body.querySelector("header h1").innerText = P("header");
+    body.querySelector("header h2").innerText = P("desc");
     body.querySelector("#qTxt").setAttribute("placeholder", P("search in books"));
     body.querySelector("#close").innerText = P("< back");
     body.querySelector("#planBtn").innerText = P("plan");
@@ -205,8 +206,8 @@ function sanitizeStr (s)
 {
     for(const extra of extras)
 	s = s.replace(new RegExp(extra, "g"), "");
-    for(const ar_sign of ar_signs)
-	s = s.replace(new RegExp(ar_sign, "g"), "");
+    for(const arSign of arSigns)
+	s = s.replace(new RegExp(arSign, "g"), "");
     s = s.replace(new RegExp("ي", "g"), "ی");
     s = s.replace(new RegExp("ك", "g"), "ک");
     s = s.toLowerCase();
