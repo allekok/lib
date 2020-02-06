@@ -41,6 +41,7 @@ button, input
     border:0;
     outline:0;
     background:none;
+    color:inherit;
 }
 header h1
 {
@@ -55,7 +56,7 @@ header h1
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(255,255,255,.96);
+    background: #fff;
     text-align: right;
     padding:1em 2em;
     overflow:auto;
@@ -83,13 +84,14 @@ button
     text-align:right;
     margin-bottom:1em;
 }
-#result button .icon
-{
-    font-size:1.5em;
-}
 button:hover
 {
     color:#900;
+}
+#result button .icon
+{
+    font-size:1.5em;
+    display:inline-block;
 }
 #close
 {
@@ -119,4 +121,5 @@ footer
 footer button
 {
     display:inline-block;
+    vertical-align:middle;
 }

@@ -1,3 +1,4 @@
+/* Variables */
 /* Tree */
 const treePath = "tree";
 
@@ -23,6 +24,32 @@ const availableLangs = {
 };
 let currentLang;
 let currentLangCc;
+const Ps = {
+    "title":{
+	"fa":"کتاب‌خانه",
+    },
+    "header":{
+	"fa":"کتابـــــــ‌خانه",
+    },
+    "desc":{
+	"fa":"کتابخانه دانشگاه آزاد سردشت",
+    },
+    "search in books":{
+	"fa":"جست‌وجو در کتاب‌ها...",
+    },
+    "search":{
+	"fa":"جست‌وجو",
+    },
+    "< back":{
+	"fa":"بازگشت ›",
+    },
+    "plan":{
+	"fa":"برنامه کاری کتاب‌خانه",
+    },
+    "not found":{
+	"fa":"نتیجه‌ای یافت نشد.",
+    },
+};
 
 /* Globals */
 const html = document.querySelector("html");
@@ -33,14 +60,20 @@ const defTarget = body.querySelector(defTargetId);
 
 /* Storage */
 const versionStorage = "version";
-const storageTimeoutDays = 100;
+const storageTimeoutDays = 30; /* 1 Month */
 const storageTimeout = storageTimeoutDays * 24 * 60 * 60 * 1000;
 
-window.addEventListener("load", function () {
-    currentLang = getLang();
-    currentLangCc = currentLang.cc;
-    applyLang(currentLang);
-});
+/* Theme */
+const themeStorage = "theme";
+const availableThemes = {
+    "light": {"name":"light","colors":["#FFF","#000","#900","#ddd"],
+	      "icon":"brightness_5"},
+    "dark": {"name":"dark","colors":["#444","#FFF","#6FF","#666"],
+	     "icon":"brightness_2"},
+};
+let currentTheme;
+
+/* Functions */
 function getLang ()
 {
     let lang = localStorage.getItem(langStorage);
@@ -59,26 +92,9 @@ function applyLang (lang)
     head.querySelector("title").innerText = P("title");
     body.querySelector("header h1").innerText = P("header");
     body.querySelector("#qTxt").setAttribute("placeholder", P("search in books"));
+    body.querySelector("#close").innerText = P("< back");
+    body.querySelector("#planBtn").innerText = P("plan");
 }
-
-const Ps = {
-    "title":{
-	"fa":"کتاب‌خانه",
-    },
-    "header":{
-	"fa":"کتابـــــــ‌خانه",
-    },
-    "desc":{
-	"fa":"کتابخانه دانشگاه آزاد سردشت",
-    },
-    "search in books":{
-	"fa":"جست‌وجو در کتاب‌ها...",
-    },
-    "search":{
-	"fa":"جست‌وجو",
-    },
-};
-
 function P(key)
 {
     try
@@ -90,17 +106,6 @@ function P(key)
 	return "";
     }
 }
-
-const qFrm = body.querySelector("#qFrm");
-const qTxt = body.querySelector("#qTxt");
-qFrm.addEventListener("submit", function (e) {
-    e.preventDefault();
-    find(qTxt.value, "#result", 10);
-});
-qTxt.addEventListener("keyup", function () {
-    find(qTxt.value, "#result", 10);
-});
-
 function find (q, t, n=-1)
 {
     const target = body.querySelector(t);
@@ -116,12 +121,13 @@ function find (q, t, n=-1)
     loadItem(path, function (list) {
 	if(list === null)
 	{
-	    target.innerText = "Letter's List Not Found!";
+	    target.innerText = P("not found");
 	    return;
 	}
-	const result = _filter(q, firstChar, list, target, n);
+	let result = _filter(q, firstChar, list, target, n);
+	if(!result) result = P("not found");
 	target.innerHTML = result;
-	/* Loading... */
+	applyTheme(currentTheme);
     });
 }
 function _filter (q, firstChar, list, target, n)
@@ -129,10 +135,10 @@ function _filter (q, firstChar, list, target, n)
     /* TODO: Last chance: search in all local files */
     let result = "";
     list = list.split("\n");
-    for (const i in list)
+    for (let item of list)
     {
 	if(n == 0) break;
-	const item = list[i].split("\t");
+	item = item.split("\t");
 	if(item.length < 2)
 	    continue;
 	const title = item[1];
@@ -197,10 +203,10 @@ function updateItem (path)
 }
 function sanitizeStr (s)
 {
-    for(const i in extras)
-	s = s.replace(new RegExp(extras[i], "g"), "");
-    for(const i in ar_signs)
-	s = s.replace(new RegExp(ar_signs[i], "g"), "");
+    for(const extra of extras)
+	s = s.replace(new RegExp(extra, "g"), "");
+    for(const ar_sign of ar_signs)
+	s = s.replace(new RegExp(ar_sign, "g"), "");
     s = s.replace(new RegExp("ي", "g"), "ی");
     s = s.replace(new RegExp("ك", "g"), "ک");
     s = s.toLowerCase();
@@ -233,14 +239,6 @@ function getUrl (url, callback)
     }
     x.send();
 }
-
-const close = body.querySelector("#close");
-close.addEventListener("click", function () {
-    const parent = close.parentNode;
-    parent.querySelector("#res").innerHTML = "";
-    parent.style.display = "none";
-});
-
 function plan ()
 {
     const D = body.querySelector("#D");
@@ -251,13 +249,138 @@ function plan ()
 	const item = resp.responseText;
 	let html = "<table>";
 	const lines = item.split("\n");
-	for(const i in lines)
+	for(const line of lines)
 	{
-	    if(! lines[i].trim()) continue;
-	    const cell = lines[i].split("  ");
+	    if(! line.trim()) continue;
+	    const cell = line.split("  ");
 	    html += `<tr><td>${cell[0]}</td><td>${cell[1]}</td></tr>`;
 	}
 	html += "</table>";
 	DRes.innerHTML = html;
     });
 }
+function setTheme (theme)
+{
+    localStorage.setItem(themeStorage, theme);
+}
+function getTheme ()
+{
+    let theme = localStorage.getItem(themeStorage);
+    if(! (theme in availableThemes))
+	theme = timeTheme();
+    return availableThemes[theme];
+}
+function timeTheme ()
+{
+    const D = new Date;
+    const H = D.getHours();
+    if(H > 6 && H < 18)
+	return "light";
+    return "dark";
+}
+function applyTheme (theme)
+{
+    setThemeIcon();
+
+    const back = theme.colors[0];
+    const fore = theme.colors[1];
+    const key = theme.colors[2];
+    const foreLight = theme.colors[3];
+    
+    const close = body.querySelector("#close");
+    const qTxt = body.querySelector("#qTxt");
+    
+    body.style.background = back;
+    body.style.color = fore;
+    body.querySelector("header h1").style.color = key;
+    body.querySelector("#D").style.background = back;
+    qTxt.style.borderBottomColor = foreLight;
+    qTxt.addEventListener("focus", function () {
+	qTxt.style.borderBottomColor = fore;
+    });
+    qTxt.addEventListener("blur", function () {
+	qTxt.style.borderBottomColor = foreLight;
+    });
+    close.style.background = foreLight;
+    close.style.color = fore;
+    close.addEventListener("mouseenter", function () {
+	close.style.background = fore;
+	close.style.color = back;
+    });
+    close.addEventListener("mouseleave", function () {
+	close.style.background = foreLight;
+	close.style.color = fore;
+    });
+    body.querySelectorAll("button").forEach(function (o) {
+	o.style.color = fore;
+	o.addEventListener("mouseenter", function () {
+	    o.style.color = key;
+	});
+	o.addEventListener("mouseleave", function () {
+	    o.style.color = fore;
+	});
+    });
+}
+function setThemeIcon ()
+{
+    const themeBtn = body.querySelector("#themeBtn");
+    if(! localStorage.getItem(themeStorage))
+    {
+	themeBtn.innerText = availableThemes.light.icon +
+	    availableThemes.dark.icon;
+    }
+    else if(currentTheme.name == "light")
+	themeBtn.innerText = availableThemes.light.icon;
+    else
+	themeBtn.innerText = availableThemes.dark.icon;
+}
+
+/* Event Listeners */
+const qFrm = body.querySelector("#qFrm");
+const qTxt = body.querySelector("#qTxt");
+const closeBtn = body.querySelector("#close");
+const planBtn = body.querySelector("#planBtn");
+const themeBtn = body.querySelector("#themeBtn");
+window.addEventListener("load", function () {
+    currentLang = getLang();
+    currentLangCc = currentLang.cc;
+    applyLang(currentLang);
+    currentTheme = getTheme();
+    applyTheme(currentTheme);
+});
+closeBtn.addEventListener("click", function () {
+    const parent = closeBtn.parentNode;
+    parent.querySelector("#res").innerHTML = "";
+    parent.style.display = "none";
+});
+planBtn.addEventListener("click", plan);
+qFrm.addEventListener("submit", function (e) {
+    e.preventDefault();
+    find(qTxt.value, "#result", 10);
+});
+qTxt.addEventListener("keyup", function () {
+    find(qTxt.value, "#result", 10);
+});
+themeBtn.addEventListener("click", function () {
+    const icon = themeBtn.innerText;
+    if(icon == "brightness_5brightness_2")
+    {
+	currentTheme = availableThemes.dark;
+	themeBtn.innerText = currentTheme.icon;
+	setTheme(currentTheme.name);
+    }
+    else if(icon == "brightness_2")
+    {
+	currentTheme = availableThemes.light;
+	themeBtn.innerText = currentTheme.icon;
+	setTheme(currentTheme.name);
+    }
+    else
+    {
+	localStorage.removeItem(themeStorage);
+	currentTheme = getTheme();
+	themeBtn.innerText = availableThemes.light.icon +
+	    availableThemes.dark.icon;
+    }
+    applyTheme(currentTheme);
+});
