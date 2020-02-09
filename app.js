@@ -107,7 +107,7 @@ function P(key)
 	return "";
     }
 }
-function find (q, t, n=-1)
+function find (q, t, n=-1, firstChar=null)
 {
     const target = body.querySelector(t);
     q = sanitizeStr(q);
@@ -116,7 +116,7 @@ function find (q, t, n=-1)
 	target.innerHTML = "";
 	return;
     }
-    const firstChar = q[0];
+    if(!firstChar) firstChar = q[0];
     const path = `${treePath}/${firstChar}/list`;
     /* Loading... */
     loadItem(path, function (list) {
@@ -126,9 +126,25 @@ function find (q, t, n=-1)
 	    return;
 	}
 	let result = _filter(q, firstChar, list, target, n);
-	if(!result) result = P("not found");
-	target.innerHTML = result;
-	applyTheme(currentTheme);
+	if(result)
+	{
+	    target.innerHTML = result;
+	    applyTheme(currentTheme);
+	}
+	else
+	{
+	    target.innerHTML = "";
+	    const firstChars = downloadedListsFirstChars();
+	    for(const c of firstChars)
+	    {
+		n = n / firstChars.length + 1;
+		loadItem(`${treePath}/${c}/list`, function (list) {
+		    result = _filter(q, c, list, target, n);
+		    target.innerHTML += result;
+		    applyTheme(currentTheme);
+		});
+	    }
+	}
     });
 }
 function _filter (q, firstChar, list, target, n)
@@ -334,6 +350,17 @@ function setThemeIcon ()
 	themeBtn.innerText = availableThemes.light.icon;
     else
 	themeBtn.innerText = availableThemes.dark.icon;
+}
+function downloadedListsFirstChars ()
+{
+    let lists = [];
+    for(let i=0; i<localStorage.length; i++)
+    {
+	const o = localStorage.key(i);
+	if(o.endsWith("/list"))
+	    lists.push(o.substr(-6,1));
+    }
+    return lists;
 }
 
 /* Event Listeners */
