@@ -156,10 +156,10 @@ function _filter (q, firstChar, list, target, n)
     {
 	if(n == 0) break;
 	item = item.split("\t");
-	if(item.length < 2)
+	if(item.length < 3)
 	    continue;
 	const title = item[1];
-	const sanTitle = sanitizeStr(title);
+	const sanTitle = item[2];
 	if(sanTitle.indexOf(q) !== -1)
 	{
 	    const id = item[0];
@@ -201,7 +201,8 @@ function downloadItem (path, callback)
 	    callback(null);
 	    return;
 	}
-	const item = resp.responseText;
+	let item = resp.responseText;
+	if(path.endsWith("/list")) item = sanList(item);
 	localStorage.setItem(path, item);
 	localStorage.setItem(`${path}_time`, Date.now());
 	callback(item);
@@ -361,6 +362,20 @@ function downloadedListsFirstChars ()
 	    lists.push(o.substr(-6,1));
     }
     return lists;
+}
+function sanList (list)
+{
+    list = list.split("\n");
+    for(const i in list)
+    {
+	let line = list[i];
+	line = line.split("\t");
+	line[2] = sanitizeStr(line[1]);
+	line = line.join("\t");
+	list[i] = line;
+    }
+    list = list.join("\n");
+    return list;
 }
 
 /* Event Listeners */
