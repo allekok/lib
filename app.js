@@ -120,12 +120,8 @@ function find (q, t, n=-1, firstChar=null)
     const path = `${treePath}/${firstChar}/list`;
     /* Loading... */
     loadItem(path, function (list) {
-	if(list === null)
-	{
-	    target.innerText = P("not found");
-	    return;
-	}
-	let result = _filter(q, firstChar, list, target, n);
+	let result = list === null ? null :
+	    _filter(q, firstChar, list, target, n);
 	if(result)
 	{
 	    target.innerHTML = result;
