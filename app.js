@@ -120,8 +120,7 @@ function find (q, t, n=-1, firstChar=null)
     const path = `${treePath}/${firstChar}/list`;
     /* Loading... */
     loadItem(path, function (list) {
-	let result = list === null ? null :
-	    _filter(q, firstChar, list, target, n);
+	let result = list ? _filter(q, firstChar, list, target, n) : null;
 	if(result)
 	{
 	    target.innerHTML = result;
@@ -131,9 +130,9 @@ function find (q, t, n=-1, firstChar=null)
 	{
 	    target.innerHTML = "";
 	    const firstChars = downloadedListsFirstChars();
+	    n = Math.ceil(n / firstChars.length) + 1;
 	    for(const c of firstChars)
 	    {
-		n = n / firstChars.length + 1;
 		loadItem(`${treePath}/${c}/list`, function (list) {
 		    result = _filter(q, c, list, target, n);
 		    target.innerHTML += result;
@@ -192,13 +191,8 @@ function loadItem (path, callback)
 function downloadItem (path, callback)
 {
     getUrl(path, function (resp) {
-	if(resp.status === 404)
-	{
-	    callback(null);
-	    return;
-	}
-	let item = resp.responseText;
-	if(path.endsWith("/list")) item = sanList(item);
+	let item = resp.status === 404 ? "" : resp.responseText;
+	if(item && path.endsWith("/list")) item = sanList(item);
 	localStorage.setItem(path, item);
 	localStorage.setItem(`${path}_time`, Date.now());
 	callback(item);
