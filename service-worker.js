@@ -5,8 +5,8 @@ self.addEventListener('install', function(event) {
     event.waitUntil(
 	caches.open(cache_ver).then(function(cache) {
 	    return cache.addAll([
-		'DroidNaskh-Regular.woff2',
-		'Material-Icons.woff2',
+		'client/style/DroidNaskh-Regular.woff2',
+		'client/style/Material-Icons.woff2',
 	    ]);
 	}));
 });
