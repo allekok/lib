@@ -60,8 +60,7 @@ const defTarget = body.querySelector(defTargetId);
 
 /* Storage */
 const versionStorage = "version";
-const storageTimeoutDays = 30; /* 1 Month */
-const storageTimeout = storageTimeoutDays * 24 * 60 * 60 * 1000;
+const versionPath = "VERSION";
 
 /* Theme */
 const themeStorage = "theme";
@@ -194,20 +193,18 @@ function downloadItem (path, callback)
 	let item = resp.status === 404 ? "" : resp.responseText;
 	if(item && path.endsWith("/list")) item = sanList(item);
 	localStorage.setItem(path, item);
-	localStorage.setItem(`${path}_time`, Date.now());
-	callback(item);
+	getUrl(versionPath, function (x) {
+	    localStorage.setItem(`${path}_ver`, x.responseText);
+	    callback(item);
+	});
     });
 }
 function updateItem (path)
 {
     const clientVersion = localStorage.getItem(versionStorage);
-    const itemTimeoutStorage = `${path}_time`;
-    const itemTimeout = localStorage.getItem(itemTimeoutStorage);
-    if(clientVersion && itemTimeout &&
-       ((Date.now() - itemTimeout) > storageTimeout))
-    {
+    const itemVersion = localStorage.getItem(`${path}_ver`);
+    if(clientVersion > itemVersion)
 	downloadItem(path, (x) => null);
-    }
 }
 function sanitizeStr (s)
 {
@@ -380,6 +377,9 @@ window.addEventListener("load", function () {
     applyLang(currentLang);
     currentTheme = getTheme();
     applyTheme(currentTheme);
+    getUrl(versionPath, function (x) {
+	localStorage.setItem(versionStorage, x.responseText);
+    });
 });
 closeBtn.addEventListener("click", function () {
     const parent = closeBtn.parentNode;
