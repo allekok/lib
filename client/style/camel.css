@@ -46,7 +46,6 @@ button, input
 header h1
 {
     font-size:4em;
-    color:#900;
     margin-bottom:0;
 }
 header h2
@@ -74,12 +73,8 @@ header h2
 {
     width:100%;
     font-size:inherit;
-    border-bottom:2px solid #aaa;
     padding:1em;
-}
-#qTxt:focus
-{
-    border-bottom-color:#000;
+    border-bottom:2px solid;
 }
 #result
 {
@@ -92,10 +87,6 @@ button
     text-align:right;
     margin-bottom:1em;
 }
-button:hover
-{
-    color:#900;
-}
 #result button .icon
 {
     font-size:1.5em;
@@ -104,13 +95,8 @@ button:hover
 #close
 {
     text-align:center;
-    background: #eee;
     border-radius: 1em;
     margin-bottom:.7em;
-}
-#close:hover
-{
-    background:#ddd;
 }
 #D #res table
 {
