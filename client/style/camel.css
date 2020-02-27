@@ -131,3 +131,9 @@ footer button
     display:inline-block;
     vertical-align:middle;
 }
+.num
+{
+    direction:ltr;
+    font-style:normal;
+    display:inline-block;
+}

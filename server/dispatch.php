@@ -11,6 +11,14 @@ $_assoc = [
     'fa' => ['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹'],
     'ckb' => ['٠', '١', '٢', '٣', '٤','٥', '٦', '٧', '٨', '٩'],
 ];
+$from = ["ك",
+	 "ي",
+	 "ى",
+	 "ھ"];
+$to = ["ک",
+       "ی",
+       "ی",
+       "ه"];
 $N = [0, ""];
 
 $sql = mysqli_connect(SQL_HOST, SQL_USER, SQL_PASS, SQL_DATABASE);
@@ -51,21 +59,28 @@ function chars ($s, $limit=-1)
     }
     return $chars;
 }
-function implode_assoc_array ($arr, $del1=":", $del2="\n")
+function implode_assoc_array ($arr, $del1=": ", $del2="\n")
 {
+    global $from, $to;
     $new_arr = [];
     foreach($arr as $k => $v)
     {
+	$k = str_replace($from, $to, $k);
+	$v = str_replace($from, $to, $v);
+	$v = num_convert($v, "ckb", "fa");
+	if($k == "ردیف") $v = num_convert($v, "en", "fa");
+	if($k == "شماره راهنما (کنگره)‏" || $k == "شماره راهنما (دیویی)‏")
+	    $v = "<i class='num'>$v</i>";
 	$new_arr[] = $k . $del1 . $v . $del2;
     }
     return $new_arr;
 }
 function sanitize_str ($s)
 {
-    global $ar_signs, $extras;
+    global $ar_signs, $extras, $from, $to;
     $s = str_replace($extras, "", $s);
     $s = str_replace($ar_signs, "", $s);
-    $s = str_replace(["ي","ك"], ["ی","ک"], $s);
+    $s = str_replace($from, $to, $s);
     $s = strtolower($s);
     $s = num_convert($s, "fa", "en");
     $s = num_convert($s, "ckb", "en");

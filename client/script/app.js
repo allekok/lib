@@ -14,6 +14,14 @@ const _assoc = {
     'fa' : ['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹'],
     'ckb' : ['٠', '١', '٢', '٣', '٤','٥', '٦', '٧', '٨', '٩'],
 };
+const from = ["ك",
+	      "ي",
+	      "ى",
+	      "ھ"];
+const to = ["ک",
+	    "ی",
+	    "ی",
+	    "ه"];
 
 /* Language */
 const langStorage = "lang";
@@ -143,7 +151,6 @@ function find (q, t, n=-1, firstChar=null)
 }
 function _filter (q, firstChar, list, target, n)
 {
-    /* TODO: Last chance: search in all local files */
     let result = "";
     list = list.split("\n");
     for (let item of list)
@@ -171,7 +178,6 @@ function O (path)
     const D = body.querySelector("#D");
     const DRes = D.querySelector("#res");
     D.style.display = "block";
-    /* TODO: Loading... */
     loadItem(path, function (item) {
 	DRes.innerHTML = `${item.replace(/\n/g, "<br>")}`;
     });
@@ -201,8 +207,10 @@ function downloadItem (path, callback)
 }
 function updateItem (path)
 {
-    const clientVersion = localStorage.getItem(versionStorage);
-    const itemVersion = localStorage.getItem(`${path}_ver`);
+    const clientVersion = parseInt(
+	localStorage.getItem(versionStorage));
+    const itemVersion = parseInt(
+	localStorage.getItem(`${path}_ver`));
     if(clientVersion > itemVersion)
 	downloadItem(path, (x) => null);
 }
@@ -212,8 +220,8 @@ function sanitizeStr (s)
 	s = s.replace(new RegExp(extra, "g"), "");
     for(const arSign of arSigns)
 	s = s.replace(new RegExp(arSign, "g"), "");
-    s = s.replace(new RegExp("ي", "g"), "ی");
-    s = s.replace(new RegExp("ك", "g"), "ک");
+    for(const i in from)
+	s = s.replace(new RegExp(from[i], "g"), to[i]);
     s = s.toLowerCase();
     s = numConvert(s, "fa", "en");
     s = numConvert(s, "ckb", "en");
@@ -237,7 +245,7 @@ function makePath (str)
 function getUrl (url, callback)
 {
     const x = new XMLHttpRequest();
-    x.open("get", url);
+    x.open("get", NEW(url));
     x.onload = function ()
     {
 	callback(this);
@@ -249,7 +257,6 @@ function plan ()
     const D = body.querySelector("#D");
     const DRes = D.querySelector("#res");
     D.style.display = "block";
-    /* TODO: Loading... */
     getUrl("plan", function (resp) {
 	const item = resp.responseText;
 	let html = "<table>";
@@ -363,6 +370,9 @@ function sanList (list)
     }
     list = list.join("\n");
     return list;
+}
+function NEW (url) {
+    return `${url}?${Date.now()}`;
 }
 
 /* Event Listeners */
