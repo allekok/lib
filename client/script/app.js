@@ -69,6 +69,8 @@ const defTarget = body.querySelector(defTargetId);
 /* Storage */
 const versionStorage = "version";
 const versionPath = "VERSION";
+const lockStorage = "lock";
+const lockTimeout = 1 * 60 * 1000; /* 1min */
 
 /* Theme */
 const themeStorage = "theme";
@@ -195,14 +197,39 @@ function loadItem (path, callback)
 }
 function downloadItem (path, callback)
 {
-    getUrl(path, function (resp) {
+    lockedGetUrl(path, function (resp) {
+	if(resp === null)
+	{
+	    callback(null);
+	    return;
+	}
 	let item = resp.status === 404 ? "" : resp.responseText;
 	if(item && path.endsWith("/list")) item = sanList(item);
 	localStorage.setItem(path, item);
-	getUrl(versionPath, function (x) {
+	callback(item);
+	if(resp.status === 404) return;
+	lockedGetUrl(versionPath, function (x) {
+	    if(x === null)
+	    {
+		callback(null);
+		return;
+	    }
 	    localStorage.setItem(`${path}_ver`, x.responseText);
-	    callback(item);
-	});
+	}, `${path}_ver`);
+    });
+}
+function lockedGetUrl (path, callback, lockPath=null)
+{
+    if(!lockPath) lockPath = path;
+    if(isLOCK(lockPath))
+    {
+	callback(null);
+	return;
+    }
+    LOCK(lockPath);
+    getUrl(path, function (x) {
+	unLOCK(lockPath);
+	callback(x);
     });
 }
 function updateItem (path)
@@ -371,8 +398,46 @@ function sanList (list)
     list = list.join("\n");
     return list;
 }
-function NEW (url) {
+function NEW (url)
+{
     return `${url}?${Date.now()}`;
+}
+function isJSON (x)
+{
+    try {
+	const JS = JSON.parse(x);
+	if(JS) return JS;
+	else   return {"nil":null};
+    }
+    catch (e) {
+	return {"nil":null};
+    }
+}
+function getLOCKS ()
+{
+    return isJSON(localStorage.getItem(lockStorage));
+}
+function setLOCKS (locks)
+{
+    localStorage.setItem(lockStorage, JSON.stringify(locks));
+}
+function isLOCK (path)
+{
+    const locks = isJSON(localStorage.getItem(lockStorage));
+    return typeof(locks[path]) != 'undefined' &&
+	Date.now() - locks[path] <= lockTimeout;
+}
+function LOCK (path)
+{
+    let locks = getLOCKS();
+    locks[path] = Date.now();
+    setLOCKS(locks);
+}
+function unLOCK (path)
+{
+    let locks = getLOCKS();
+    delete locks[path];
+    setLOCKS(locks);
 }
 
 /* Event Listeners */
