@@ -87,7 +87,7 @@ function sanitize_str ($s)
     $s = preg_replace("/\s+/u", "", $s);
     return $s;
 }
-function num_convert($_string, $_from, $_to)
+function num_convert ($_string, $_from, $_to)
 {
     /* Convert a string of numbers from 
        (en,fa,ckb) > (en,fa,ckb) */
@@ -98,7 +98,7 @@ function num_convert($_string, $_from, $_to)
 }
 function list_files ($path)
 {
-    global $N, $sql;
+    global $N, $sql, $from, $to;
     $n = 0;
     $files = [];
     $d = opendir($path);
@@ -115,6 +115,7 @@ function list_files ($path)
 	    if(!$result) die($query);
 	    $title = str_replace(["عنوان‏:" , "Title‎:", "\n"], ["", "", "  "],
 				 mysqli_fetch_assoc($result)["عنوان‏"]);
+	    $title = str_replace($from, $to, $title);
 	    $files[] = "$f\t$title";
 	}
 	$n++;
