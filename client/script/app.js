@@ -415,15 +415,15 @@ function isJSON (x)
 }
 function getLOCKS ()
 {
-    return isJSON(localStorage.getItem(lockStorage));
+    return isJSON(sessionStorage.getItem(lockStorage));
 }
 function setLOCKS (locks)
 {
-    localStorage.setItem(lockStorage, JSON.stringify(locks));
+    sessionStorage.setItem(lockStorage, JSON.stringify(locks));
 }
 function isLOCK (path)
 {
-    const locks = isJSON(localStorage.getItem(lockStorage));
+    const locks = getLOCKS();
     return typeof(locks[path]) != 'undefined' &&
 	Date.now() - locks[path] <= lockTimeout;
 }
