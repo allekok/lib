@@ -75,9 +75,11 @@ const lockTimeout = 1 * 60 * 1000; /* 1min */
 /* Theme */
 const themeStorage = "theme";
 const availableThemes = {
-    "light": {"name":"light","colors":["#FFF","#000","#900","#ddd"],
+    "light": {"name":"light","colors":["#FFF","#000","#900","#ddd",
+				       "rgba(255,255,255,.94)"],
 	      "icon":"brightness_5"},
-    "dark": {"name":"dark","colors":["#444","#FFF","#6FF","#666"],
+    "dark": {"name":"dark","colors":["#444","#FFF","#6FF","#666",
+				     "rgba(70,70,70,.96)"],
 	     "icon":"brightness_2"},
 };
 let currentTheme;
@@ -325,6 +327,7 @@ function applyTheme (theme)
     const fore = theme.colors[1];
     const key = theme.colors[2];
     const foreLight = theme.colors[3];
+    const DBack = theme.colors[4];
     
     const close = body.querySelector("#close");
     const qTxt = body.querySelector("#qTxt");
@@ -332,7 +335,7 @@ function applyTheme (theme)
     body.style.background = back;
     body.style.color = fore;
     body.querySelector("header h1").style.color = key;
-    body.querySelector("#D").style.background = back;
+    body.querySelector("#D").style.background = DBack;
     qTxt.style.borderBottomColor = foreLight;
     qTxt.addEventListener("focus", function () {
 	qTxt.style.borderBottomColor = fore;
