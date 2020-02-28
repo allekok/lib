@@ -216,7 +216,11 @@ function downloadItem (path, callback)
 		callback(null);
 		return;
 	    }
-	    localStorage.setItem(`${path}_ver`, x.responseText);
+	    const _v = parseInt(x.responseText);
+	    localStorage.setItem(`${path}_ver`, _v);
+	    /* (?) Maybe this If is un-necessary */
+	    if(_v > parseInt(localStorage.getItem(versionStorage)))
+		localStorage.setItem(versionStorage, _v);
 	}, `${path}_ver`);
     });
 }
