@@ -65,10 +65,13 @@ const head = document.head;
 const body = document.body;
 const defTargetId = "#result";
 const defTarget = body.querySelector(defTargetId);
+const mainRepo = "https://github.com/allekok/lib";
 
-/* Storage */
+/* Version */
 const versionStorage = "version";
 const versionPath = "VERSION";
+
+/* Lock */
 const lockStorage = "lock";
 const lockTimeout = 1 * 60 * 1000; /* 1min */
 
@@ -292,16 +295,20 @@ function plan ()
     D.style.display = "block";
     getUrl("plan", function (resp) {
 	const item = resp.responseText;
-	let html = "<table>";
+	let table = "<table>";
+	let text = "";
 	const lines = item.split("\n");
 	for(const line of lines)
 	{
 	    if(! line.trim()) continue;
 	    const cell = line.split("  ");
-	    html += `<tr><td>${cell[0]}</td><td>${cell[1]}</td></tr>`;
+	    if(cell.length === 1)
+		text += `<p>${cell[0]}</p>`;
+	    else
+		table += `<tr><td>${cell[0]}</td><td>${cell[1]}</td></tr>`;
 	}
-	html += "</table>";
-	DRes.innerHTML = html;
+	table += "</table>";
+	DRes.innerHTML = table + text;
     });
 }
 function setTheme (theme)
@@ -453,6 +460,7 @@ const qTxt = body.querySelector("#qTxt");
 const closeBtn = body.querySelector("#close");
 const planBtn = body.querySelector("#planBtn");
 const themeBtn = body.querySelector("#themeBtn");
+const codeBtn = body.querySelector("#codeBtn");
 window.addEventListener("load", function () {
     currentLang = getLang();
     currentLangCc = currentLang.cc;
@@ -498,4 +506,7 @@ themeBtn.addEventListener("click", function () {
 	    availableThemes.dark.icon;
     }
     applyTheme(currentTheme);
+});
+codeBtn.addEventListener("click", function () {
+    window.location = mainRepo;
 });

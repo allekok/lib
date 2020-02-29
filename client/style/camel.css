@@ -116,6 +116,12 @@ footer button
     display:inline-block;
     vertical-align:middle;
 }
+footer .icon {
+    font-size:1.2em;
+}
+#codeBtn {
+    font-size:1.4em;
+}
 .num
 {
     direction:ltr;
