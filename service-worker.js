@@ -5,10 +5,10 @@ self.addEventListener('install', function(event) {
     event.waitUntil(
 	caches.open(cache_ver).then(function(cache) {
 	    return cache.addAll([
-		'/lib/client/style/DroidNaskh-Regular.woff2',
-		'/lib/client/style/Material-Icons.woff2',
-		'/lib/client/style/camel-comp.css?v4',
-		'/lib/client/script/app-comp.js?v9',
+		'/lib/code/client/style/DroidNaskh-Regular.woff2',
+		'/lib/code/client/style/Material-Icons.woff2',
+		'/lib/code/client/style/camel-comp.css?v6',
+		'/lib/code/client/script/app-comp.js?v12',
 	    ]);
 	}));
 });
