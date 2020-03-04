@@ -71,13 +71,45 @@ function implode_assoc_array ($arr, $del1=": ", $del2="\n")
 	if($k == "ردیف")
 	    $v = num_convert($v, "en", "fa");
 	if($k == "شماره راهنما (دیویی)‏")
-	    $v = "<i class='num'>$v</i>";
-	if($k == "شماره راهنما (کنگره)‏")
-	    $v = "<i class='num'>$v</i>[map_".
-		 substr($v,0,strpos($v, "\u{200E}"))."]";
+	    if($v) $v = "<i class='num'>$v</i>";
+	if($k == "شماره راهنما (کنگره)‏") {
+	    $map = remove_lowcase(remove_nums(
+		str_replace(
+		    " ", "",
+		    substr($v,0,strpos($v, "\u{200E}")))));
+	    if($v) $v = "<i class='num'>$v</i>";
+	    if($map) $v .= "[map_$map]";
+	}
 	$new_arr[] = $k . $del1 . $v . $del2;
     }
     return $new_arr;
+}
+function remove_nums ($s)
+{
+    global $_assoc;
+    foreach($_assoc as $arr) {
+	$s = str_replace($arr, "", $s);
+    }
+    return $s;
+}
+function remove_lowcase ($s)
+{
+    $new_s = "";
+    $s_len = strlen($s);
+    $L = "abcdefghijklmnopqrstuvwxyz";
+    $L_len = strlen($L);
+    for($i = 0; $i < $s_len; $i++) {
+	$ch = substr($s, $i, 1);
+	$carry = true;
+	for($j = 0; $j < $L_len; $j++) {
+	    if($ch == substr($L, $j, 1)) {
+		$carry = false;
+		break;
+	    }
+	}
+	if($carry) $new_s .= $ch;
+    }
+    return $new_s;
 }
 function sanitize_str ($s)
 {
