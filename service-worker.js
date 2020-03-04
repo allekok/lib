@@ -7,7 +7,7 @@ self.addEventListener('install', function(event) {
 	    return cache.addAll([
 		'/lib/code/client/style/DroidNaskh-Regular.woff2',
 		'/lib/code/client/style/Material-Icons.woff2',
-		'/lib/code/client/style/camel-comp.css?v6',
+		'/lib/code/client/style/camel-comp.css?v7',
 		'/lib/code/client/script/app-comp.js?v13',
 	    ]);
 	}));
