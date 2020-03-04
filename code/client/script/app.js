@@ -98,8 +98,8 @@ const availableThemes = {
     "light": {"name":"light","colors":["#FFF","#000","#900","#ddd",
 				       "rgba(255,255,255,.94)"],
 	      "icon":"brightness_5"},
-    "dark": {"name":"dark","colors":["#444","#FFF","#6FF","#666",
-				     "rgba(70,70,70,.96)"],
+    "dark": {"name":"dark","colors":["#222","#FFF","#6FF","#444",
+				     "rgba(35,35,35,.97)"],
 	     "icon":"brightness_2"},
 };
 let currentTheme;
@@ -490,11 +490,12 @@ function map (label) {
 	if(typeof(L) == "undefined") return null;
 	let locations = "";
 	for(const set in L) {
-	    locations += `${P("set")}: ${numConvert(set,"en","fa")}<br>`;
+	    locations += `-&rsaquo; ${P("set")}: ${numConvert(set,"en","fa")}<br>`;
 	    for(const col in L[set]) {
 		locations += `<i style="padding-right:2em">
-${P("col")}: ${numConvert(col,"en","fa")}</i><br>`;
-		locations += `<i style="padding-right:4em">
+-&rsaquo; ${P("col")}: ${numConvert(col,"en","fa")}</i><br>`;
+		locations += `<i class="icon"
+style="padding-right:4em">arrow_downward</i> <i>
 ${P("row")}: ${numConvert(L[set][col].join(", "),"en","fa")}</i><br>`;
 	    }
 	}
