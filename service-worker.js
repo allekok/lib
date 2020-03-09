@@ -8,7 +8,7 @@ self.addEventListener('install', function(event) {
 		'/lib/code/client/style/DroidNaskh-Regular.woff2',
 		'/lib/code/client/style/Material-Icons.woff2',
 		'/lib/code/client/style/camel-comp.css?v7',
-		'/lib/code/client/script/app-comp.js?v14',
+		'/lib/code/client/script/app-comp.js?v15',
 	    ]);
 	}));
 });

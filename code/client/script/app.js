@@ -40,13 +40,13 @@ let currentLang;
 let currentLangCc;
 const Ps = {
     "title":{
-	"fa":"کتاب‌خانه",
+	"fa":"کتاب‌خانه دانشگاه آزاد اسلامی سردشت",
     },
     "header":{
 	"fa":"کتابــــــ‌خانه",
     },
     "desc":{
-	"fa":"کتاب‌خانه دانشگاه آزاد سردشت",
+	"fa":"کتاب‌خانه دانشگاه آزاد اسلامی سردشت",
     },
     "search in books":{
 	"fa":"جست‌وجو در کتاب‌ها...",
@@ -95,7 +95,7 @@ const lockTimeout = 1 * 60 * 1000; /* 1min */
 /* Theme */
 const themeStorage = "theme";
 const availableThemes = {
-    "light": {"name":"light","colors":["#FFF","#000","#900","#ddd",
+    "light": {"name":"light","colors":["#FFF","#000","#900","#eee",
 				       "rgba(255,255,255,.94)"],
 	      "icon":"brightness_5"},
     "dark": {"name":"dark","colors":["#222","#FFF","#6FF","#444",
