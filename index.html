@@ -1,36 +1,39 @@
 <!DOCTYPE html>
 <html>
-    <head>
-	<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1" />
-	<link rel="stylesheet" href="/lib/code/client/style/camel-comp.css?v7" />
-	<meta name="google-site-verification" content="UVQsQ38WiVTYYDrHWsUzN417TDEYDatv6mci-exP0JM" />
-	<title></title>
-	<script>
-	 if ('serviceWorker' in navigator)
-	     navigator.serviceWorker.register('/lib/service-worker.js');
-	</script>
-    </head>
-    <body>
-	<header>
-	    <h1></h1>
-	    <h2></h2>
-	</header>
-	<form id="qFrm">
-	    <input type="text" id="qTxt">
-	</form>
-	<div id="result"></div>
-	<div id="D">
-	    <div id="close"></div>
-	    <div id="res"></div>
-	</div>
-	<footer>
-	    <button id="planBtn" type="button"></button>
-	    <button id="themeBtn" type="button" class="icon"
-	    >brightness_5brightness_2</button>
-	    <button id="codeBtn" class="icon" type="button"
-	    >code</button>
-	</footer>
-	<script src="/lib/code/client/script/app-comp.js?v15"></script>
-    </body>
+	<head>
+		<title></title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width">
+		<meta name="google-site-verification"
+		      content="UVQsQ38WiVTYYDrHWsUzN417TDEYDatv6mci-exP0JM">
+		<link rel="stylesheet"
+		      href="code/client/style/camel-comp.css?v10">
+		<script>
+		 navigator.serviceWorker.register('/lib/service-worker.js')
+		</script>
+	</head>
+	<body>
+		<header>
+			<h1></h1>
+			<h2></h2>
+		</header>
+		<form id="qFrm">
+			<input type="text" id="qTxt">
+		</form>
+		<div id="result"></div>
+		<div id="D">
+			<div id="close"></div>
+			<div id="res"></div>
+		</div>
+		<footer>
+			<button type="button" id="planBtn"></button>
+			<button type="button" id="themeBtn" class="icon">
+				brightness_5brightness_2
+			</button>
+			<button type="button" id="codeBtn" class="icon">
+				code
+			</button>
+		</footer>
+		<script src="code/client/script/app-comp.js?v19"></script>
+	</body>
 </html>
