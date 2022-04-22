@@ -3,8 +3,8 @@ const cache_ver = 'v2'
 self.addEventListener('install', event => {
 	event.waitUntil(caches.open(cache_ver).then(function(cache) {
 		return cache.addAll([
-			'/lib/code/client/style/camel-comp.css?v10',
-			'/lib/code/client/script/app-comp.js?v19',
+			'/lib/code/client/style/camel-comp.css?v11',
+			'/lib/code/client/script/app-comp.js?v20',
 			'/lib/code/client/style/DroidNaskh-Regular.woff2',
 			'/lib/code/client/style/Material-Icons.woff2',
 		])
