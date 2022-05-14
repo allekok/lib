@@ -1,7 +1,7 @@
 const cache_ver = 'v2'
 
 self.addEventListener('install', event => {
-	event.waitUntil(caches.open(cache_ver).then(function(cache) {
+	event.waitUntil(caches.open(cache_ver).then(cache => {
 		return cache.addAll([
 			'/lib/code/client/style/camel-comp.css?v11',
 			'/lib/code/client/script/app-comp.js?v20',
